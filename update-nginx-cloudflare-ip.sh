@@ -11,6 +11,9 @@
 ipf='https://www.cloudflare.com/ips-v4'
 ips='https://www.cloudflare.com/ips-v6'
  
+WWW_GROUP="www-data"
+WWW_USER="www-data"
+
 ## temp file location ##
 t_ip_f="$(/bin/mktemp /tmp/cloudflare.XXXXXXXX)"
 t_ip_s="$(/bin/mktemp /tmp/cloudflare.XXXXXXXX)"
@@ -27,6 +30,8 @@ conf_out="/etc/nginx/cdn-ip/cloudflare.ip"
 /usr/bin/awk '{ print "set_real_ip_from " $1 ";" }' $t_ip_s >> $conf_out
 ## echo 'real_ip_header CF-Connecting-IP;' >> $conf_out
  
+chown $WWW_USER:$WWW_GROUP $conf_out
+
 ## delete temp files ##
 [ -f "$t_ip_f" ] && /bin/rm -f $t_ip_f
 [ -f "$t_ip_s" ] && /bin/rm -f $t_ip_s
